@@ -1,0 +1,54 @@
+Installation:
+
+  Commands: |
+    sudo yum install freeradius freeradius-utils freeradius-doc
+    sudo usermod atomic-noc -G radiusd
+    sudo mkdir         /etc/raddb/atomic/
+    sudo chgrp radiusd /etc/raddb/atomic
+    sudo chmod g+s     /etc/raddb/atomic
+    sudo touch /etc/raddb/atomic/README           # add content later
+    sudo touch /etc/raddb/atomic/clients.conf     # add content later
+    sudo touch /etc/raddb/atomic/proxy.conf       # add content later
+    sudo chmod o= /etc/raddb/atomic/clients.conf  # contains secrets
+    sudo chmod o= /etc/raddb/atomic/proxy.conf    # contains secrets
+    sudo mkdir /etc/raddb/atomic/sites
+    sudo touch /etc/raddb/atomic/sites/atomic-default  # add content later
+    sudo ln -s /etc/raddb/atomic/sites/atomic-default /etc/raddb/sites-available/atomic-default
+    sudo ln -s /etc/raddb/sites-available/atomic-default /etc/raddb/sites-enabled/atomic-default
+    sudo rm /etc/raddb/sites-enabled/default       # not needed
+    sudo rm /etc/raddb/sites-enabled/inner-tunnel  # not needed
+
+  Populate these configuration files: |
+    /etc/raddb/atomic/README
+    /etc/raddb/atomic/clients.conf
+    /etc/raddb/atomic/proxy.conf
+    /etc/raddb/atomic/sites/atomic-default
+
+  Modify /etc/raddb/radiusd.conf: |
+
+    - Use the Atomic proxy config instead of the default:
+      # $INCLUDE proxy.conf
+      $INCLUDE atomic/proxy.conf
+
+    - Use the Atomic client config instead of the default:
+      # $INCLUDE clients.conf
+      $INCLUDE atomic/clients.conf
+
+Configuration:
+
+  /etc/raddb/atomic-clients.conf: |
+
+    x
+
+  /etc/raddb/atomic-proxy.conf: |
+
+    x
+
+  /etc/raddb/sites-available/atomic-proxy: |
+    
+    x
+
+References:
+  - /usr/share/doc/freeradius/concepts/aaa.rst
+  - /usr/share/doc/freeradius/concepts/proxy.rst
+  - /etc/raddb/proxy.conf

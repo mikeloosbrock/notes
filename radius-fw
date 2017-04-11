@@ -1,0 +1,273 @@
+!===============================================================================
+! atomic250-cfw01 (69.67.16.69)
+!===============================================================================
+
+banner login T20170306.0423 - Migrate Radius to RAD01 & RAD02 (Atomic Data, LLC)
+
+object network NAT-ATOMIC-RADIUS-01
+  host 10.66.193.50
+
+object network NAT-ATOMIC-RADIUS-02
+  host 10.60.120.20
+
+object-group network ATOMIC-RADIUS-SERVERS
+  network-object object NAT-ATOMIC-RADIUS-01
+
+object-group network RADIUS-SERVERS
+  network-object object NAT-ATOMIC-RADIUS-01
+  network-object object NAT-ATOMIC-RADIUS-02
+
+no banner login
+
+!-------------------------------------------------------------------------------
+! Cut-over
+!-------------------------------------------------------------------------------
+
+banner login T20170306.0423 - Migrate Radius to RAD01 & RAD02 (Atomic Data, LLC)
+
+! Remove the NAT cfg for rad03, freeing up it's external IP for rad01 to use:
+
+!object-group network ATOMIC-RADIUS-SERVERS
+!  no network-object object NAT-ATOMIC-RADIUS-03
+
+!object-group network RADIUS-SERVERS
+!  no network-object host 10.60.120.22
+!  no network-object host 10.66.193.21
+
+!no object network NAT-ATOMIC-RADIUS-03
+!no object network EXT_ATOMIC-RADIUS-03
+
+! Create the NAT cfg for rad01, using rad03's old external IP:
+
+!object network EXT_ATOMIC-RADIUS-01
+!  host 71.5.108.90
+
+!object network NAT-ATOMIC-RADIUS-01
+!  nat (FW-ATOMIC-INT-DOMAIN-S1,outside) static EXT_ATOMIC-RADIUS-01
+
+no banner login
+
+!===============================================================================
+
+! Questions:
+! - Is there a reason to distinguish between RADIUS-SERVERS and ATOMIC-RADIUS-SERVERS?
+! - Is there any reason why public (EXT) address are added to RADIUS-SERVERS?
+! - 
+
+object-group service RADIUS-SERVICES tcp-udp
+  port-object eq 1812
+  port-object eq 1813
+  port-object eq 1645
+  port-object eq 1646
+
+object-group service ATOMIC-RADIUS-SERVICES tcp-udp
+  group-object RADIUS-SERVICES
+
+object-group service ATOMIC-INT-DOMAIN-S1-RADIUS-SERVICES tcp-udp
+  group-object ATOMIC-RADIUS-SERVICES
+
+object-group service ATOMIC-TOR151-RADIUS-SERVICES tcp-udp
+  group-object ATOMIC-INT-DOMAIN-S1-RADIUS-SERVICES
+
+!-------------------
+
+object network EXT_ATOMIC-RADIUS-03
+  host 71.5.108.90
+object network NAT-ATOMIC-RADIUS-03
+  host 10.66.193.21
+  nat (FW-ATOMIC-INT-DOMAIN-S1,outside) static EXT_ATOMIC-RADIUS-03
+
+object network EXT_ATOMIC-MGMT-RADIUS-03
+  host 71.5.108.90
+object network NAT-ATOMIC-MGMT-RADIUS-03
+  host 10.66.193.21
+  nat (FW-ATOMIC-INT-DOMAIN-S1,FW-ATOMIC-MGMT-HQ) static EXT_ATOMIC-MGMT-RADIUS-03
+
+object network EXT_ATOMIC-RADIUS-04
+  host 71.5.108.91
+object network NAT-ATOMIC-RADIUS-04
+  host 10.60.120.22
+  nat (FW-MSP250-CFW01-LINK,FW-ATOMIC-MGMT-HQ) static EXT_ATOMIC-RADIUS-04
+
+object-group network RADIUS-SERVERS
+  network-object 71.5.104.29 255.255.255.255
+  network-object 71.5.108.90 255.255.255.255
+  network-object 71.5.108.91 255.255.255.255
+  network-object host 10.60.120.22
+  network-object host 10.66.193.21
+
+object-group network ATOMIC-RADIUS-SERVERS
+  network-object object NAT-ATOMIC-RADIUS-03
+
+object-group network ATOMIC-RADIUS-MGMT-SERVERS
+  group-object ATOMIC-RADIUS-SERVERS
+
+object-group network ATOMIC-INT-DOMAIN-S1-RADIUS-SERVERS
+  group-object ATOMIC-RADIUS-SERVERS
+
+object-group network ATOMIC-TOR151-RADIUS-SERVERS
+  group-object ATOMIC-INT-DOMAIN-S1-RADIUS-SERVERS
+
+object-group network ATOMIC-TOR151-RADIUS-GUESTS
+  group-object ATOMIC-TOR151-MGMT-LOCAL
+
+object-group network ATOMIC-INT-DOMAIN-S1-NONAT
+  group-object ATOMIC-TOR151-RADIUS-GUESTS
+
+!-------------------
+
+access-list FW-ATOMIC-MGMT-HQ_access_in extended permit tcp object-group ATOMIC-MGMT-HQ-LOCAL object-group RADIUS-SERVERS object-group RADIUS-SERVICES 
+access-list FW-ATOMIC-MGMT-HQ_access_in extended permit udp object-group ATOMIC-MGMT-HQ-LOCAL object-group RADIUS-SERVERS object-group RADIUS-SERVICES
+
+access-list outside_access_in extended permit tcp object-group ATOMIC-RADIUS-MGMT-LOCATIONS object-group ATOMIC-RADIUS-MGMT-SERVERS object-group ATOMIC-RADIUS-MGMT-SERVICES 
+access-list outside_access_in extended permit tcp any object-group ATOMIC-RADIUS-SERVERS object-group ATOMIC-RADIUS-SERVICES 
+access-list outside_access_in extended permit udp any object-group ATOMIC-RADIUS-SERVERS object-group ATOMIC-RADIUS-SERVICES 
+access-list outside_access_in extended permit icmp any object-group ATOMIC-RADIUS-SERVERS
+
+access-list FW-ATOMIC-INT-DOMAIN-S1_access_in extended permit udp object-group ATOMIC-INT-DOMAIN-S1-RADIUS-SERVERS object-group ATOMIC-INT-DOMAIN-S1-AD-SERVERS object-group ATOMIC-INT-DOMAIN-S1-RADIUS-SERVICES 
+access-list FW-ATOMIC-INT-DOMAIN-S1_access_in extended permit tcp object-group ATOMIC-INT-DOMAIN-S1-RADIUS-SERVERS object-group ATOMIC-INT-DOMAIN-S1-AD-SERVERS object-group ATOMIC-INT-DOMAIN-S1-RADIUS-SERVICES
+
+access-list atomic-tor151-access-filter extended permit icmp object-group ATOMIC-TOR151-RADIUS-GUESTS object-group ATOMIC-TOR151-RADIUS-SERVERS 
+access-list atomic-tor151-access-filter extended permit tcp object-group ATOMIC-TOR151-RADIUS-GUESTS object-group ATOMIC-TOR151-RADIUS-SERVERS object-group ATOMIC-TOR151-RADIUS-SERVICES 
+access-list atomic-tor151-access-filter extended permit udp object-group ATOMIC-TOR151-RADIUS-GUESTS object-group ATOMIC-TOR151-RADIUS-SERVERS object-group ATOMIC-TOR151-RADIUS-SERVICES
+
+access-list outside_20_cryptomap extended permit ip object-group ATOMIC-TOR151-RADIUS-SERVERS object-group ATOMIC-TOR151-RADIUS-GUESTS
+
+!-------------------
+
+object-group network ATOMIC-RADIUS-MGMT-LOCATIONS
+  network-object host 69.67.17.202
+  network-object host 69.67.17.203
+  network-object host 71.5.108.69
+  network-object host 71.5.109.150
+  network-object host 69.67.17.20
+  network-object host 71.5.109.70
+  network-object 69.67.17.24 255.255.255.248
+  network-object 69.67.17.32 255.255.255.252
+
+object-group service ATOMIC-RADIUS-MGMT-SERVICES tcp
+  group-object ATOMIC-MONITORING-SERVICES
+
+
+
+
+
+
+
+!===============================================================================
+! atomic7700-cfw02 (69.67.16.86)
+!===============================================================================
+
+banner login T20170306.0423 - Migrate Radius to RAD01 & RAD02 (Atomic Data, LLC)
+
+object network NAT-ATOMIC-RADIUS-02
+  host 10.60.120.20
+
+object-group network ATOMIC-RADIUS-SERVERS
+  network-object object NAT-ATOMIC-RADIUS-02
+
+object-group network ATOMIC-TOR151-RADIUS-SERVERS
+  network-object object NAT-ATOMIC-RADIUS-02
+
+no banner login
+
+!-------------------------------------------------------------------------------
+! Cut-over
+!-------------------------------------------------------------------------------
+
+banner login T20170306.0423 - Migrate Radius to RAD01 & RAD02 (Atomic Data, LLC)
+
+! Remove the NAT cfg for rad04, freeing up it's external IP for rad02 to use:
+
+!object-group network ATOMIC-RADIUS-SERVERS
+!  no network-object object NAT-ATOMIC-RADIUS-04
+
+!object-group network ATOMIC-TOR151-RADIUS-SERVERS
+!  no network-object object NAT-ATOMIC-RADIUS-04
+
+!no object network NAT-ATOMIC-RADIUS-04
+!no object network EXT_ATOMIC-RADIUS-04
+
+! Create the NAT cfg for rad02, using rad04's old external IP:
+
+!object network EXT_ATOMIC-RADIUS-02
+!  host 71.5.108.91
+
+!object network NAT-ATOMIC-RADIUS-02
+!  nat (FW-ATOMIC-INT-DOMAIN-S2,outside) static EXT_ATOMIC-RADIUS-02
+
+no banner login
+
+!===============================================================================
+
+object network EXT_ATOMIC-RADIUS-04
+  host 71.5.108.91
+object network NAT-ATOMIC-RADIUS-04
+  host 10.60.120.22
+  nat (FW-ATOMIC-INT-DOMAIN-S2,outside) static EXT_ATOMIC-RADIUS-04
+
+!---------
+
+object-group network ATOMIC-RADIUS-SERVERS
+  network-object object NAT-ATOMIC-RADIUS-04
+
+object-group network ATOMIC-RADIUS-MGMT-SERVERS
+  group-object ATOMIC-RADIUS-SERVERS
+
+object-group network ATOMIC-INT-DOMAIN-S2-RADIUS-SERVERS
+  group-object ATOMIC-RADIUS-SERVERS
+
+object-group network ATOMIC-TOR151-RADIUS-SERVERS
+  network-object object NAT-ATOMIC-RADIUS-04
+
+object-group network ATOMIC-TOR151-RADIUS-GUESTS
+  group-object ATOMIC-TOR151-MGMT-LOCAL
+
+object-group network ATOMIC-INT-DOMAIN-S2-NONAT
+  group-object ATOMIC-TOR151-RADIUS-GUESTS
+
+object-group network ATOMIC-RADIUS-MGMT-LOCATIONS
+  network-object host 69.67.17.202
+  network-object host 69.67.17.203
+  network-object host 71.5.108.69
+  network-object host 71.5.109.150
+  network-object host 69.67.17.20
+  network-object host 71.5.109.70
+  network-object 69.67.17.24 255.255.255.248
+  network-object 69.67.17.32 255.255.255.252
+
+!---------
+
+object-group service RADIUS-SERVICES tcp-udp
+  port-object eq 1812
+  port-object eq 1813
+  port-object eq 1645
+  port-object eq 1646
+
+object-group service ATOMIC-RADIUS-SERVICES tcp-udp
+  group-object RADIUS-SERVICES
+
+object-group service ATOMIC-INT-DOMAIN-S2-RADIUS-SERVICES tcp-udp
+  group-object ATOMIC-RADIUS-SERVICES
+
+object-group service ATOMIC-TOR151-RADIUS-SERVICES tcp-udp
+  group-object ATOMIC-RADIUS-SERVICES
+
+object-group service ATOMIC-RADIUS-MGMT-SERVICES tcp
+  group-object ATOMIC-MONITORING-SERVICES
+
+!---------
+
+access-list outside_access_in extended permit tcp object-group ATOMIC-RADIUS-MGMT-LOCATIONS object-group ATOMIC-RADIUS-MGMT-SERVERS object-group ATOMIC-RADIUS-MGMT-SERVICES
+access-list outside_access_in extended permit tcp any object-group ATOMIC-RADIUS-SERVERS object-group ATOMIC-RADIUS-SERVICES
+access-list outside_access_in extended permit udp any object-group ATOMIC-RADIUS-SERVERS object-group ATOMIC-RADIUS-SERVICES
+access-list outside_access_in extended permit icmp any object-group ATOMIC-RADIUS-SERVERS
+
+access-list FW-ATOMIC-INT-DOMAIN-S2_access_in extended permit udp object-group ATOMIC-INT-DOMAIN-S2-RADIUS-SERVERS object-group ATOMIC-INT-DOMAIN-S2-AD-SERVERS object-group ATOMIC-INT-DOMAIN-S2-RADIUS-SERVICES 
+access-list FW-ATOMIC-INT-DOMAIN-S2_access_in extended permit tcp object-group ATOMIC-INT-DOMAIN-S2-RADIUS-SERVERS object-group ATOMIC-INT-DOMAIN-S2-AD-SERVERS object-group ATOMIC-INT-DOMAIN-S2-RADIUS-SERVICES
+
+access-list outside_50_cryptomap extended permit ip object-group ATOMIC-TOR151-RADIUS-SERVERS object-group ATOMIC-TOR151-RADIUS-GUESTS
+
+access-list atomic-tor151-access-filter extended permit icmp object-group ATOMIC-TOR151-RADIUS-GUESTS object-group ATOMIC-TOR151-RADIUS-SERVERS
+access-list atomic-tor151-access-filter extended permit tcp object-group ATOMIC-TOR151-RADIUS-GUESTS object-group ATOMIC-TOR151-RADIUS-SERVERS object-group ATOMIC-TOR151-RADIUS-SERVICES
+access-list atomic-tor151-access-filter extended permit udp object-group ATOMIC-TOR151-RADIUS-GUESTS object-group ATOMIC-TOR151-RADIUS-SERVERS object-group ATOMIC-TOR151-RADIUS-SERVICES
