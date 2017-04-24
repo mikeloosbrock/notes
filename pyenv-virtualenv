@@ -19,14 +19,20 @@ Installation:
 
 Using pyenv:
 
-  - You can just install python versions without environments, but usually you
-    want environments anyways. Plus, installing an environment automatically
-    installs the associated python version if it's not already. So just the
-    use pyenv-virtualenv commands described below.
+  - Install a python version:
+    $ pyenv install 2.7.10
+
+  - List all installed python versions: ('system' is the non-pyenv version provided by the os)
+    $ pyenv list
+
+  - Use a particular python version:
+    $ pyenv local  <version>  # use the specified version until you leave the current dir
+    $ pyenv shell  <version>  # use the specified version until you exit your shell
+    $ pyenv global <version>  # make the specified version your default version
 
 Using pyenv-virtualenv:
 
-  - Create a new environment:
+  - Create a new environment: (the python version must already be installed)
     $ pyenv virtualenv 2.7.10 my-virtual-env-name
 
   - List all existing environments:
@@ -42,3 +48,15 @@ Using pyenv-virtualenv:
 
   - Delete an environment:
     $ pyenv uninstall my-virtual-env-name
+
+Ansible Setup:
+
+    $ pyenv install 2.7.10                      # install the python version, not necessary if already installed
+    $ pyenv virtualenv 2.7.10 ansible           # create an app-specific virtualenv named 'ansible'
+    $ mkdir ansible                             # create a dir for the ansible repo (or git clone it)
+    $ echo 'ansible' > ansible/.python-version  # auto-enable the 'ansible' virtualenv when you enter the ansible repo
+    $ cd ansible                                # enter the ansible repo dir, auto-enabling the 'ansible' virtualenv
+    $ pip install ansible                       # install ansible, into the 'ansible' virtualenv
+    $ ansible --version                         # see that ansible is installed and available
+    $ cd ..                                     # leave the ansible repo dir, auto-disabling the 'ansible' virtualenv
+    $ ansible --version                         # see that ansible is no longer available
