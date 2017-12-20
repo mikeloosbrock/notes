@@ -15,14 +15,14 @@ Crouton Setup:
     Notes:
       - Enabling/disabling developer mode erases all data on the chromebook!!!
       - When in developer mode, you must press CTL+D on every reboot.
-      - If you screw up the CTL+D mentioned above, you'll likely disable developer mode (and erase your data).
+      - If you screw up the CTL+D mentioned above, you may unintentionally disable developer mode (and erase your data).
 
   2.) Install the Crouton Chrome extension: https://goo.gl/OVQOEt
   
   3.) Download Crouton: https://goo.gl/fd3zc
   
   4.) Launch the ChromeOS Developer Shell (crosh) in a new Chrome tab by pressing CTL+ALT+T
-
+  
   5.) In the crosh shell:
 
     crosh> shell

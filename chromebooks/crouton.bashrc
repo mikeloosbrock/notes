@@ -1,0 +1,9 @@
+alias sudo="/usr/bin/sudo"                                 # restore/fix sudo after chromeos aliases it, breaking various crouton commands
+alias crouton="sudo sh ~/Downloads/crouton"                # crouton shortcut
+alias chroot-list="sudo edit-chroot -al"                   # list all chroots and their properties
+alias chroot-edit="sudo edit-chroot"                       # edit a chroot (pass the chroot name as the first arg) 
+alias chroot-lxde-xiwi-desktop="sudo startlxde -b -X xiwi" # launch a full lxde desktop in xiwi mode
+alias chroot-lxde-xorg-desktop="sudo startlxde -b -X xorg" # launch a full lxde desktop in xorg mode (for opengl support and minecraft)
+alias chroot-xiwi="sudo startxiwi -b -T"                   # run an single chroot app in a chrome tab (pass the app name as the first arg)
+alias lxterm="chroot-xiwi lxterminal"                      # run lxterminal in a chrome tab
+alias keepassx="chroot-xiwi keepassx"                      # run keepassx in a chrome tab
