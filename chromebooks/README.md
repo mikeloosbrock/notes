@@ -2,18 +2,18 @@
 
 1. Enable developer mode on the chromebook.
 
-   Steps:
-   1. Press and hold **ESC + REFRESH + POWER**.
-   2. Press CTL+D when prompted that Chrome OS is missing or damaged.
-   3. Press ENTER when prompted to turn OS verification off.
-   4. The chromebook will reboot. Press **CTL + D** when prompted that OS verification is off.
-   5. Wait while the system transitions to developer mode.
-   6. The chromebook will reboot. Press **CTL + D** when prompted that OS verification is off.
+   On my Samsung Chromebook:
+   * Press and hold **ESC+REFRESH+POWER**.
+   * Press **CTL+D** when prompted that Chrome OS is missing or damaged.
+   * Press ENTER when prompted to turn OS verification off.
+   * The chromebook will reboot. Press **CTL+D** when prompted that OS verification is off.
+   * Wait while the system transitions to developer mode.
+   * The chromebook will reboot. Press **CTL+D** when prompted that OS verification is off.
 
-   Note:
+   Important Notes:
    * Enabling/disabling developer mode erases all data on the chromebook!!!
-   * When in developer mode, you must press CTL+D on every reboot.
-   * If you screw up the CTL+D mentioned above, you may unintentionally disable developer mode (and erase your data).
+   * When in developer mode, you must press **CTL+D** on every reboot.
+   * If you screw up the **CTL+D** mentioned above, you may unintentionally disable developer mode (and erase your data).
 
 2. Install the Crouton Chrome extension: https://goo.gl/OVQOEt
 
@@ -21,27 +21,27 @@
 
 ## Customize Crouton
 
-4. Launch the ChromeOS Developer Shell (crosh) in a new Chrome tab by pressing **CTL + ALT + T**.
+1. Launch the ChromeOS Developer Shell (crosh) in a new Chrome tab by pressing **CTL+ALT+T**.
   
-5. In the crosh shell, run these commands:
-...```crosh> shell
-...chronos@localhost /$ cd
-...chronos@localhost ~$ vi .bashrc```
+2. In the crosh shell, run these commands:
+   ```crosh> shell
+   chronos@localhost /$ cd
+   chronos@localhost ~$ vi .bashrc```
 
-  6.) Add these aliases to ~/.bashrc:
+3. Add these aliases to ~/.bashrc:
 
-    alias crouton="sudo sh ~/Downloads/crouton"    # crouton shortcut
-    alias chroots="sudo edit-chroot -al"           # list all chroots and their properties
-    alias edit-chroot="sudo edit-chroot"           # edit a chroot (pass chroot name as first arg) 
-    alias lxde="sudo startlxde -b -X xiwi"         # launch lxde desktop in xiwi mode
-    alias lxde-xorg="sudo startlxde -b -X xorg"    # launch lxde desktop in xorg mode (for opengl support and minecraft)
-    alias xiwi="sudo startxiwi -b -T"              # run an application in a chrome tab (pass app name as first arg)
-    alias lxterm="sudo startxiwi -b -T lxterminal" # run lxterminal in a chrome tab
-    alias keepassx="sudo startxiwi -b -T keepassx" # run keepassx in a chrome tab
+   ```alias crouton="sudo sh ~/Downloads/crouton"    # crouton shortcut
+   alias chroots="sudo edit-chroot -al"           # list all chroots and their properties
+   alias edit-chroot="sudo edit-chroot"           # edit a chroot (pass chroot name as first arg) 
+   alias lxde="sudo startlxde -b -X xiwi"         # launch lxde desktop in xiwi mode
+   alias lxde-xorg="sudo startlxde -b -X xorg"    # launch lxde desktop in xorg mode (for opengl support and minecraft)
+   alias xiwi="sudo startxiwi -b -T"              # run an application in a chrome tab (pass app name as first arg)
+   alias lxterm="sudo startxiwi -b -T lxterminal" # run lxterminal in a chrome tab
+   alias keepassx="sudo startxiwi -b -T keepassx" # run keepassx in a chrome tab```
 
-  7.) Activate the aliases added above:
+4. Activate the aliases added above:
 
-    chronos@localhost ~$ . ~/.bashrc
+   chronos@localhost ~$ . ~/.bashrc
 
 ################################################################################
 
