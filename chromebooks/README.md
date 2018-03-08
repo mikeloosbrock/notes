@@ -1,6 +1,7 @@
 ## Install Crouton
 
 1. Enable developer mode on the chromebook.
+
    Steps:
    1. Press and hold **ESC + REFRESH + POWER**.
    2. Press CTL+D when prompted that Chrome OS is missing or damaged.
@@ -8,6 +9,7 @@
    4. The chromebook will reboot. Press **CTL + D** when prompted that OS verification is off.
    5. Wait while the system transitions to developer mode.
    6. The chromebook will reboot. Press **CTL + D** when prompted that OS verification is off.
+
    Note:
    * Enabling/disabling developer mode erases all data on the chromebook!!!
    * When in developer mode, you must press CTL+D on every reboot.
