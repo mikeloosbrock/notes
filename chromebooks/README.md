@@ -24,14 +24,17 @@
 1. Launch the ChromeOS Developer Shell (crosh) in a new Chrome tab by pressing **CTL+ALT+T**.
   
 2. In the crosh shell, run these commands:
-   ```crosh> shell
+
+   ```
+   crosh> shell
    chronos@localhost /$ cd
    chronos@localhost ~$ vi .bashrc
    ```
 
 3. Add these aliases to ~/.bashrc:
 
-   ```alias crouton="sudo sh ~/Downloads/crouton"    # crouton shortcut
+   ```
+   alias crouton="sudo sh ~/Downloads/crouton"    # crouton shortcut
    alias chroots="sudo edit-chroot -al"           # list all chroots and their properties
    alias edit-chroot="sudo edit-chroot"           # edit a chroot (pass chroot name as first arg) 
    alias lxde="sudo startlxde -b -X xiwi"         # launch lxde desktop in xiwi mode
@@ -43,18 +46,24 @@
 
 4. Activate the aliases added above:
 
-   ```chronos@localhost ~$ . ~/.bashrc```
+   ```
+   chronos@localhost ~$ . ~/.bashrc
+   ```
 
 ## Chroot Installation
 
 1. Install an Ubuntu LXDE chroot:
 
    (The Ubuntu release is specified with -r.)
-   ```chronos@localhost ~$ crouton -n lxde -r xenial -t lxde,extension,keyboard,xiwi,xorg```
+
+   ```
+   chronos@localhost ~$ crouton -n lxde -r xenial -t lxde,extension,keyboard,xiwi,xorg
+   ```
 
 2. Launch a terminal in the chroot:
 
    (This uses an alias created above, and launches the terminal in a new Chrome tab.)
+
    ```chronos@localhost ~$ lxterm```
 
 3. In the chroot terminal launched above, fix a weird logout issue in LXDE:
@@ -63,7 +72,7 @@
 
 4. In the chroot, enable network servers by adding the following lines to /etc/rc.local:
 
-   ``` (lxde)user@localhost:~$ sudo /sbin/iptables -I INPUT -p tcp --dport 22    -j ACCEPT # SSH
+   ```(lxde)user@localhost:~$ sudo /sbin/iptables -I INPUT -p tcp --dport 22    -j ACCEPT # SSH
    (lxde)user@localhost:~$ sudo /sbin/iptables -I INPUT -p tcp --dport 25565 -j ACCEPT # Minecraft
    (lxde)user@localhost:~$ sudo /sbin/iptables -I INPUT -p udp --dport 25565 -j ACCEPT # Minecraft
    ```
