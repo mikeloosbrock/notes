@@ -5,15 +5,15 @@
    On my Samsung Chromebook:
    * Press and hold **ESC+REFRESH+POWER**.
    * Press **CTL+D** when prompted that Chrome OS is missing or damaged.
-   * Press ENTER when prompted to turn OS verification off.
+   * Press **ENTER** when prompted to turn OS verification off.
    * The chromebook will reboot. Press **CTL+D** when prompted that OS verification is off.
    * Wait while the system transitions to developer mode.
    * The chromebook will reboot. Press **CTL+D** when prompted that OS verification is off.
 
    Important Notes:
-   * Enabling/disabling developer mode erases all data on the chromebook!!!
+   * Enabling/disabling developer mode _erases all data on the chromebook!!!_
    * When in developer mode, you must press **CTL+D** on every reboot.
-   * If you screw up the **CTL+D** mentioned above, you may unintentionally disable developer mode (and erase your data).
+   * If you screw up the **CTL+D** mentioned above, you may disable developer mode (and erase your data).
 
 2. Install the Crouton Chrome extension: https://goo.gl/OVQOEt
 
