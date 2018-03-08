@@ -1,4 +1,4 @@
-## Install Crouton
+## Crouton Installation
 
 1. Enable developer mode on the chromebook.
 
@@ -26,7 +26,8 @@
 2. In the crosh shell, run these commands:
    ```crosh> shell
    chronos@localhost /$ cd
-   chronos@localhost ~$ vi .bashrc```
+   chronos@localhost ~$ vi .bashrc
+   ```
 
 3. Add these aliases to ~/.bashrc:
 
@@ -37,34 +38,35 @@
    alias lxde-xorg="sudo startlxde -b -X xorg"    # launch lxde desktop in xorg mode (for opengl support and minecraft)
    alias xiwi="sudo startxiwi -b -T"              # run an application in a chrome tab (pass app name as first arg)
    alias lxterm="sudo startxiwi -b -T lxterminal" # run lxterminal in a chrome tab
-   alias keepassx="sudo startxiwi -b -T keepassx" # run keepassx in a chrome tab```
+   alias keepassx="sudo startxiwi -b -T keepassx" # run keepassx in a chrome tab
+   ```
 
 4. Activate the aliases added above:
 
-   chronos@localhost ~$ . ~/.bashrc
+   ```chronos@localhost ~$ . ~/.bashrc
+   ```
+## Chroot Installation
 
-################################################################################
+1. Install an Ubuntu LXDE chroot:
 
-Setup a:
+   (The Ubuntu release is specified with -r.)
+   ```chronos@localhost ~$ crouton -n lxde -r xenial -t lxde,extension,keyboard,xiwi,xorg
+   ```
 
-  1.) Install an Ubuntu LXDE chroot:
+2. Launch a terminal in the chroot:
 
-    (The Ubuntu release is specified with -r.)
+   (This uses an alias created above, and launches the terminal in a new Chrome tab.)
+   ```chronos@localhost ~$ lxterm
+   ```
 
-    chronos@localhost ~$ crouton -n lxde -r xenial -t lxde,extension,keyboard,xiwi,xorg
+3. In the chroot terminal launched above, fix a weird logout issue in LXDE:
 
-  2.) Launch a terminal in the chroot:
+   ```(lxde)user@localhost:~$ sudo apt-get install lxsession-logout
+   ```
 
-    (This uses an alias created above, and launches the terminal in a new Chrome tab.)
+4. In the chroot, enable network servers by adding the following lines to /etc/rc.local:
 
-    chronos@localhost ~$ lxterm
-
-  2.) In the chroot, fix logout issue in LXDE:
-
-    (lxde)user@localhost:~$ sudo apt-get install lxsession-logout
-
-  3.) In the chroot, enable network servers by adding the following lines to /etc/rc.local:
-
-    /sbin/iptables -I INPUT -p tcp --dport 22    -j ACCEPT # SSH
-    /sbin/iptables -I INPUT -p tcp --dport 25565 -j ACCEPT # Minecraft
-    /sbin/iptables -I INPUT -p udp --dport 25565 -j ACCEPT # Minecraft
+   ```(lxde)user@localhost:~$ sudo /sbin/iptables -I INPUT -p tcp --dport 22    -j ACCEPT # SSH
+   (lxde)user@localhost:~$ sudo /sbin/iptables -I INPUT -p tcp --dport 25565 -j ACCEPT # Minecraft
+   (lxde)user@localhost:~$ sudo /sbin/iptables -I INPUT -p udp --dport 25565 -j ACCEPT # Minecraft
+   ```
