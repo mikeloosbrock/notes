@@ -1,6 +1,6 @@
 ## Crouton Installation
 
-1. Enable developer mode on the chromebook.
+1. Enable _developer mode_.
 
    On my Samsung Chromebook:
    * Press and hold **ESC+REFRESH+POWER**.
@@ -11,7 +11,7 @@
    * The chromebook will reboot. Press **CTL+D** when prompted that OS verification is off.
 
    Important Notes:
-   * Enabling/disabling developer mode _erases all data on the chromebook!!!_
+   * Enabling/disabling developer mode **erases all data on the chromebook!!!**
    * When in developer mode, you must press **CTL+D** on every reboot.
    * If you screw up the **CTL+D** mentioned above, you may disable developer mode (and erase your data).
 
@@ -28,26 +28,31 @@
    ```
    crosh> shell
    chronos@localhost /$ cd
-   chronos@localhost ~$ vi .bashrc
+   chronos@localhost ~$ sudo chmod a+x ~/Downloads/crouton
+   chronos@localhost ~$ sudo mkdir /usr/local/bin
+   chronos@localhost ~$ sudo mv ~/Downloads/crouton /usr/local/bin/
    ```
 
-3. Add these aliases to ~/.bashrc:
+3. Add these aliases to ~/crouton.bashrc:
 
    ```
-   alias crouton="sudo sh ~/Downloads/crouton"    # crouton shortcut
-   alias chroots="sudo edit-chroot -al"           # list all chroots and their properties
-   alias edit-chroot="sudo edit-chroot"           # edit a chroot (pass chroot name as first arg) 
-   alias lxde="sudo startlxde -b -X xiwi"         # launch lxde desktop in xiwi mode
-   alias lxde-xorg="sudo startlxde -b -X xorg"    # launch lxde desktop in xorg mode (for opengl support and minecraft)
-   alias xiwi="sudo startxiwi -b -T"              # run an application in a chrome tab (pass app name as first arg)
-   alias lxterm="sudo startxiwi -b -T lxterminal" # run lxterminal in a chrome tab
-   alias keepassx="sudo startxiwi -b -T keepassx" # run keepassx in a chrome tab
+   alias crouton="sudo sh /usr/local/bin/crouton"             # crouton shortcut
+   alias chroot-list="sudo edit-chroot -al"                   # list all chroots and their properties
+   alias chroot-edit="sudo edit-chroot"                       # edit a chroot (pass the chroot name as the first arg)
+   alias chroot-lxde-xiwi-desktop="sudo startlxde -b -X xiwi" # launch a full lxde desktop in xiwi mode
+   alias chroot-lxde-xorg-desktop="sudo startlxde -b -X xorg" # launch a full lxde desktop in xorg mode (for opengl support and minecraft)
+   alias chroot-xiwi="sudo startxiwi -b -T"                   # run an single chroot app in a chrome tab (pass the app name as the first arg)
+   alias lxterm="chroot-xiwi lxterminal"                      # run lxterminal in a chrome tab
+   alias keepassx="chroot-xiwi keepassx"                      # run keepassx in a chrome tab
    ```
 
 4. Activate the aliases added above:
 
    ```
-   chronos@localhost ~$ . ~/.bashrc
+   chronos@localhost ~$ sudo chmod a+x ~/Downloads/crouton
+   chronos@localhost ~$ sudo mkdir /usr/local/bin
+   chronos@localhost ~$ sudo mv ~/Downloads/crouton /usr/local/bin/
+   chronos@localhost ~$ sudo mv ~/crouton.bashrc /usr/local/bin/
    ```
 
 ## Chroot Installation
@@ -64,15 +69,20 @@
 
    (This uses an alias created above, and launches the terminal in a new Chrome tab.)
 
-   ```chronos@localhost ~$ lxterm```
+   ```
+   chronos@localhost ~$ lxterm
+   ```
 
 3. In the chroot terminal launched above, fix a weird logout issue in LXDE:
 
-   ```(lxde)user@localhost:~$ sudo apt-get install lxsession-logout```
+   ```
+   (lxde)user@localhost:~$ sudo apt-get install lxsession-logout
+   ```
 
 4. In the chroot, enable network servers by adding the following lines to /etc/rc.local:
 
-   ```(lxde)user@localhost:~$ sudo /sbin/iptables -I INPUT -p tcp --dport 22    -j ACCEPT # SSH
+   ```
+   (lxde)user@localhost:~$ sudo /sbin/iptables -I INPUT -p tcp --dport 22    -j ACCEPT # SSH
    (lxde)user@localhost:~$ sudo /sbin/iptables -I INPUT -p tcp --dport 25565 -j ACCEPT # Minecraft
    (lxde)user@localhost:~$ sudo /sbin/iptables -I INPUT -p udp --dport 25565 -j ACCEPT # Minecraft
    ```
