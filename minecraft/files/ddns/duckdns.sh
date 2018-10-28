@@ -1,7 +1,7 @@
 #!/bin/bash
 
 domains="loosbrock-mc,superjoojoo"
-token="e032ee8d-3f85-4717-9d21-57403cbbf438"
+token="NOT-IN-GIT"
 
 curl_exit=$(echo url="https://www.duckdns.org/update?domains=${domains}&token=${token}" | /usr/bin/curl -skK -)
 
