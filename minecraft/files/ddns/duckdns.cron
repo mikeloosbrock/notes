@@ -1,0 +1,2 @@
+*/5 * * * * root /var/minecraft/ddns/duckdns.sh >/dev/null 2>&1
+@reboot     root /var/minecraft/ddns/duckdns.sh >/dev/null 2>&1
