@@ -1,0 +1,44 @@
+### Tested on Ubuntu 16.04 (AWS T2 instance). ###
+
+Overview: |
+
+  Steps [1] and [2] need be done just once. Step [3] is done whenever you want
+  to update the Spigot server code to get bug/security fixes, new features, etc.
+  Step [4] is done whenever you want to create a new Spigot server instance.
+
+Step-by-Step: |
+
+  - [1] Setup the host server OS using the instructions in server-setup.yml.
+
+  - [2] Setup the Spigot environment: |
+        set minecraft_user=minecraft
+        set minecraft_dir=/var/minecraft
+        set spigot_dir=${minecraft_dir}/spigot
+        sudo mkdir -p ${spigot_dir}/{build,instances,shared}
+        sudo ln -sf ${minecraft_dir}/shared/ops.json       ${spigot_dir}/shared/ops.json        # symlink the server-wide list of ops
+        sudo ln -sf ${minecraft_dir}/shared/whitelist.json ${spigot_dir}/shared/whitelist.json  # symlink the server-wide list of whitelist players
+        sudo chown -R ${minecraft_user}:${minecraft_user}  ${spigot_dir}
+
+  - [3] Build/update the Spigot server code: |
+        # Run these commands as the ${minecraft_user} user.
+        set minecraft_user=minecraft
+        set minecraft_dir=/var/minecraft
+        set spigot_dir=${minecraft_dir}/spigot
+        cd ${spigot_dir}/build
+        curl -o BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+        java -jar BuildTools.jar  # add '--rev <revision>' if you want to build a specific revision
+        # Update any necessary instance symlinks to the resulting spigot*.jar and craftbukkit*.jar files.
+
+  - [4] Create a new Spigot server instance: |
+        # Run these commands as the ${minecraft_user} user.
+        set minecraft_user=minecraft
+        set spigot_dir=/var/minecraft/spigot
+        set instance_name=test-instance                                                  # name the instance - in this example it's named 'main'
+        set instance_dir=${spigot_dir}/instances/${instance_name}                        # everything belonging to this instance is in this dir
+        mkdir -p ${instance_dir}/worlds                                                  # create the instance directory and the worlds sub-directory
+        ln -sf ${spigot_dir}/build/spigot*.jar        ${instance_dir}/spigot.jar         # symlink the spigot jar, select a specific revision if there are multiple
+        ln -sf ${spigot_dir}/build/craftbukkit*.jar   ${instance_dir}/craftbukkit.jar    # symlink the craftbukkit jar, select a specific revision if there are multiple
+        ln -sf ${spigot_dir}/shared/ops.json          ${instance_dir}/ops.json           # symlink the list of ops
+        ln -sf ${spigot_dir}/shared/whitelist.json    ${instance_dir}/whitelist.json     # symlink the list of whitelist players
+        ln -sf ${spigot_dir}/shared/server.properties ${instance_dir}/server.properties  # symlink the server properties file
+        ln -sf ${spigot_dir}/shared/start.sh          ${instance_dir}/start.sh           # symlink the start script

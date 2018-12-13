@@ -1,0 +1,36 @@
+### Tested on Ubuntu 16.04 (AWS T2 instance). ###
+
+Overview: |
+
+  This file documents how to setup the host server OS that the Minecraft server
+  application runs on top of. Steps [5] and [6] describe how to setup instances
+  of the Minecraft server application.
+
+Step-by-Step: |
+
+  - [1] Provision a Linux server: |
+        - Physical server or AWS instance with >= 1GB RAM.
+        - The rest of this document assumes Ubuntu Linux.
+
+  - [2] Set the server hostname: |
+        set server_name=minecraft
+        sudo sed -i -E 's/^(127.0.0.1 localhost).*$/\1 ${server_name}/' /etc/hosts
+        sudo hostname ${server_name}
+        echo ${server_name} | sudo tee /etc/hostname
+
+  - [3] Add necessary packages: |
+        sudo apt-get update
+        sudo apt-get -y install openjdk-8-jre-headless git tmux screen
+
+  - [4] Create a user and directory for the minecraft app to run under: |
+        set minecraft_user=minecraft
+        set minecraft_dir=/var/minecraft
+        sudo useradd -M -d ${minecraft_dir} -s /usr/sbin/nologin ${minecraft_user}
+        sudo mkdir -p ${minecraft_dir}/shared
+        sudo touch ${minecraft_dir}/shared/ops.json        # add ops players to this file
+        sudo touch ${minecraft_dir}/shared/whitelist.json  # add whitelisted players to this file
+        sudo chown -R ${minecraft_user}:${minecraft_user} ${minecraft_dir}
+
+  - [5] Setup a Spigot Minecraft server instance using the instructions in spigot-server.yml.
+
+  - [6] Setup a Forge Minecraft server instance using the instructions in forge-server.yml.
