@@ -25,7 +25,7 @@ Step-by-Step: |
   - [4] Create a user and directory for the minecraft app to run under: |
         export minecraft_user=minecraft
         export minecraft_dir=/var/minecraft
-        sudo useradd -M -d ${minecraft_dir} -s /usr/sbin/nologin ${minecraft_user}
+        sudo useradd -M -d ${minecraft_dir} -s /bin/bash ${minecraft_user}
         sudo mkdir -p ${minecraft_dir}/shared
         sudo touch ${minecraft_dir}/shared/ops.json        # add ops players to this file
         sudo touch ${minecraft_dir}/shared/whitelist.json  # add whitelisted players to this file
