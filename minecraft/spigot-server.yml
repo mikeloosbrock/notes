@@ -21,7 +21,7 @@ Step-by-Step: |
 
   - [3] Build/update the Spigot server code: |
         # Run these commands as the ${minecraft_user} user.
-        export minecraft_user=minecraft
+        sudo su ${minecraft_user}
         export minecraft_dir=/var/minecraft
         export spigot_dir=${minecraft_dir}/spigot
         cd ${spigot_dir}/build
@@ -31,9 +31,9 @@ Step-by-Step: |
 
   - [4] Create a new Spigot server instance: |
         # Run these commands as the ${minecraft_user} user.
-        export minecraft_user=minecraft
+        # sudo su ${minecraft_user}
         export spigot_dir=/var/minecraft/spigot
-        export instance_name=test-instance                                               # name the instance - in this example it's named 'main'
+        export instance_name=main                                                        # name the instance - in this example it's named 'main'
         export instance_dir=${spigot_dir}/instances/${instance_name}                     # everything belonging to this instance is in this dir
         mkdir -p ${instance_dir}/worlds                                                  # create the instance directory and the worlds sub-directory
         ln -sf ${spigot_dir}/build/spigot*.jar        ${instance_dir}/spigot.jar         # symlink the spigot jar, select a specific revision if there are multiple
