@@ -13,8 +13,8 @@ Step-by-Step: |
         - The rest of this document assumes Ubuntu Linux.
 
   - [2] Set the server hostname: |
-        set server_name=minecraft
-        sudo sed -i -E 's/^(127.0.0.1 localhost).*$/\1 ${server_name}/' /etc/hosts
+        export server_name=minecraft
+        sudo sed -i -E "s/^(127.0.0.1 localhost).*$/\1 ${server_name}/" /etc/hosts
         sudo hostname ${server_name}
         echo ${server_name} | sudo tee /etc/hostname
 
@@ -23,8 +23,8 @@ Step-by-Step: |
         sudo apt-get -y install openjdk-8-jre-headless git tmux screen
 
   - [4] Create a user and directory for the minecraft app to run under: |
-        set minecraft_user=minecraft
-        set minecraft_dir=/var/minecraft
+        export minecraft_user=minecraft
+        export minecraft_dir=/var/minecraft
         sudo useradd -M -d ${minecraft_dir} -s /usr/sbin/nologin ${minecraft_user}
         sudo mkdir -p ${minecraft_dir}/shared
         sudo touch ${minecraft_dir}/shared/ops.json        # add ops players to this file

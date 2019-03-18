@@ -11,9 +11,9 @@ Step-by-Step: |
   - [1] Setup the host server OS using the instructions in server-setup.yml.
 
   - [2] Setup the Forge environment: |
-        set minecraft_user=minecraft
-        set minecraft_dir=/var/minecraft
-        set forge_dir=${minecraft_dir}/forge
+        export minecraft_user=minecraft
+        export minecraft_dir=/var/minecraft
+        export forge_dir=${minecraft_dir}/forge
         sudo mkdir -p ${forge_dir}/{build,instances,shared}
         sudo ln -sf ${minecraft_dir}/shared/ops.json       ${forge_dir}/shared/ops.json        # symlink the server-wide list of ops
         sudo ln -sf ${minecraft_dir}/shared/whitelist.json ${forge_dir}/shared/whitelist.json  # symlink the server-wide list of whitelist players
@@ -29,10 +29,10 @@ Step-by-Step: |
 
   - [4] Create a new Forge server instance: |
         # Run these commands as the ${minecraft_user} user.
-        set minecraft_user=minecraft
-        set forge_dir=/var/minecraft/forge
-        set instance_name=test-instance                                                 # name the instance - in this example it's named 'main'
-        set instance_dir=${forge_dir}/instances/${instance_name}                        # everything belonging to this instance is in this dir
+        export minecraft_user=minecraft
+        export forge_dir=/var/minecraft/forge
+        export instance_name=test-instance                                              # name the instance - in this example it's named 'main'
+        export instance_dir=${forge_dir}/instances/${instance_name}                     # everything belonging to this instance is in this dir
         mkdir -p ${instance_dir}/worlds                                                 # create the instance directory and the worlds sub-directory
         ln -sf ${forge_dir}/build/spigot*.jar        ${instance_dir}/spigot.jar         # symlink the spigot jar, select a specific revision if there are multiple
         ln -sf ${forge_dir}/build/craftbukkit*.jar   ${instance_dir}/craftbukkit.jar    # symlink the craftbukkit jar, select a specific revision if there are multiple

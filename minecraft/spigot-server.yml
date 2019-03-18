@@ -11,9 +11,9 @@ Step-by-Step: |
   - [1] Setup the host server OS using the instructions in server-setup.yml.
 
   - [2] Setup the Spigot environment: |
-        set minecraft_user=minecraft
-        set minecraft_dir=/var/minecraft
-        set spigot_dir=${minecraft_dir}/spigot
+        export minecraft_user=minecraft
+        export minecraft_dir=/var/minecraft
+        export spigot_dir=${minecraft_dir}/spigot
         sudo mkdir -p ${spigot_dir}/{build,instances,shared}
         sudo ln -sf ${minecraft_dir}/shared/ops.json       ${spigot_dir}/shared/ops.json        # symlink the server-wide list of ops
         sudo ln -sf ${minecraft_dir}/shared/whitelist.json ${spigot_dir}/shared/whitelist.json  # symlink the server-wide list of whitelist players
@@ -21,9 +21,9 @@ Step-by-Step: |
 
   - [3] Build/update the Spigot server code: |
         # Run these commands as the ${minecraft_user} user.
-        set minecraft_user=minecraft
-        set minecraft_dir=/var/minecraft
-        set spigot_dir=${minecraft_dir}/spigot
+        export minecraft_user=minecraft
+        export minecraft_dir=/var/minecraft
+        export spigot_dir=${minecraft_dir}/spigot
         cd ${spigot_dir}/build
         curl -o BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
         java -jar BuildTools.jar  # add '--rev <revision>' if you want to build a specific revision
@@ -31,10 +31,10 @@ Step-by-Step: |
 
   - [4] Create a new Spigot server instance: |
         # Run these commands as the ${minecraft_user} user.
-        set minecraft_user=minecraft
-        set spigot_dir=/var/minecraft/spigot
-        set instance_name=test-instance                                                  # name the instance - in this example it's named 'main'
-        set instance_dir=${spigot_dir}/instances/${instance_name}                        # everything belonging to this instance is in this dir
+        export minecraft_user=minecraft
+        export spigot_dir=/var/minecraft/spigot
+        export instance_name=test-instance                                               # name the instance - in this example it's named 'main'
+        export instance_dir=${spigot_dir}/instances/${instance_name}                     # everything belonging to this instance is in this dir
         mkdir -p ${instance_dir}/worlds                                                  # create the instance directory and the worlds sub-directory
         ln -sf ${spigot_dir}/build/spigot*.jar        ${instance_dir}/spigot.jar         # symlink the spigot jar, select a specific revision if there are multiple
         ln -sf ${spigot_dir}/build/craftbukkit*.jar   ${instance_dir}/craftbukkit.jar    # symlink the craftbukkit jar, select a specific revision if there are multiple
