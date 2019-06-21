@@ -1,23 +1,23 @@
-Background:
-  - pyenv allows you to install multiple versions of the python interpeter.
-  - pyenv-virtualenv allows you to have multiple independent python module sets.
-  - A specific python version plus a specific module set is called an 'environment'.
-  - These tools allow you to create multiple (completely) independent python environments on one system.
-  - These python environments can be enabled/disabled manually or automatically.
-  - These python environments are user-specific, and don't affect the system's default python install.
-  - This is great for development sandboxes or accommodating python code with weird/broken dependencies.
-  - Don't jack up your system - use the python environments instead!
-  - https://github.com/pyenv/pyenv
-  - https://github.com/pyenv/pyenv-virtualenv
+## Background
+  * pyenv allows you to install multiple versions of the python interpeter.
+  * pyenv-virtualenv allows you to install multiple independent sets of python modules.
+  * A named pairing of an interpreter version and a module set is called a 'python environment'.
+  * You can create multiple (completely) independent python environments on one system.
+  * These python environments can be enabled/disabled manually or automatically.
+  * These python environments are user-specific, and don't affect the system's default python install.
+  * This is great for development sandboxes or accommodating python code with weird/broken dependencies.
+  * Don't jack up your system - use python environments instead!
+  * https://github.com/pyenv/pyenv
+  * https://github.com/pyenv/pyenv-virtualenv
 
-Installation:
-  OSX:
-    brew update
-    brew install pyenv pyenv-virtualenv
-    echo 'eval "$(pyenv init -)"' >> ~/.profile
-    echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.profile
+## Installation
+### OSX:
+  brew update
+  brew install pyenv pyenv-virtualenv
+  echo 'eval "$(pyenv init -)"' >> ~/.profile
+  echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.profile
 
-Using pyenv:
+## Using pyenv
 
   - Install a python version:
     $ pyenv install 2.7.10
